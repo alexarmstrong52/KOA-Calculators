@@ -273,7 +273,7 @@
     <h1>Benefit Power Tracker</h1>
   </div>
 
-  <p class="hint">Enter your B.P. values below — all calculations update automatically. Enter numbers without commas.</p>
+  <p class="hint">Enter your B.P. values below — all calculations update automatically. Commas and periods are both accepted as thousand separators.</p>
 
   <!-- Summary Cards -->
   <div class="summary-grid">
@@ -302,6 +302,7 @@
   <!-- Main Table -->
   <div class="panel">
     <div class="panel-label">Category Breakdown</div>
+    <div style="font-size:12px; color:var(--text-dim); font-style:italic; margin-top:-12px; margin-bottom:16px;">Max B.P. values last updated: May 2026</div>
     <div class="table-scroll">
       <table id="bpTable">
         <thead>
@@ -378,7 +379,7 @@ function buildTable() {
 }
 
 function formatInput(el) {
-  const raw = el.value.replace(/,/g, '').replace(/[^0-9]/g, '');
+  const raw = el.value.replace(/[,\.]/g, '').replace(/[^0-9]/g, '');
   const num = parseInt(raw, 10);
   if (!isNaN(num)) {
     const cursor = el.selectionStart;
@@ -394,7 +395,7 @@ function formatInput(el) {
 }
 
 function getRawValue(i) {
-  const v = document.getElementById('bp_'+i).value.replace(/,/g, '');
+  const v = document.getElementById('bp_'+i).value.replace(/[,\.]/g, '');
   const n = parseFloat(v);
   return isNaN(n) || n < 0 ? 0 : n;
 }
