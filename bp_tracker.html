@@ -273,7 +273,7 @@
     <h1>Benefit Power Tracker</h1>
   </div>
 
-  <p class="hint">Enter your B.P. values below — all calculations update automatically. Commas and periods are both accepted as thousand separators.</p>
+  <p class="hint">Enter your B.P. values below — all calculations update automatically. Commas, periods, and spaces are all accepted as thousand separators.</p>
 
   <!-- Summary Cards -->
   <div class="summary-grid">
@@ -379,7 +379,7 @@ function buildTable() {
 }
 
 function formatInput(el) {
-  const raw = el.value.replace(/[,\.]/g, '').replace(/[^0-9]/g, '');
+  const raw = el.value.replace(/[,\.\s]/g, '').replace(/[^0-9]/g, '');
   const num = parseInt(raw, 10);
   if (!isNaN(num)) {
     const cursor = el.selectionStart;
@@ -395,7 +395,7 @@ function formatInput(el) {
 }
 
 function getRawValue(i) {
-  const v = document.getElementById('bp_'+i).value.replace(/[,\.]/g, '');
+  const v = document.getElementById('bp_'+i).value.replace(/[,\.\s]/g, '');
   const n = parseFloat(v);
   return isNaN(n) || n < 0 ? 0 : n;
 }
