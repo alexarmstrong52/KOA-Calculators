@@ -172,6 +172,9 @@
     transition: border-color 0.2s;
     box-sizing: border-box;
   }
+  .bp-input::-webkit-inner-spin-button,
+  .bp-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .bp-input { -moz-appearance: textfield; }
   .bp-input:focus { border-color: var(--purple); box-shadow: 0 0 8px rgba(168,124,212,0.15); }
   .bp-input::placeholder { color: var(--text-dim); font-style: italic; }
 
@@ -349,7 +352,7 @@ function buildTable() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${cat.name}</td>
-      <td><input class="bp-input" type="number" id="bp_${i}" placeholder="0" min="0" oninput="recalc()" /></td>
+      <td><input class="bp-input" type="text" id="bp_${i}" placeholder="0" oninput="formatInput(this)" /></td>
       <td class="calc-val">${fmt(cat.max)}</td>
       <td class="calc-val" id="gap_${i}">—</td>
       <td class="bp-pct-cell" id="bpPct_${i}">—</td>
@@ -374,11 +377,30 @@ function buildTable() {
   tbody.appendChild(tr);
 }
 
+function formatInput(el) {
+  const raw = el.value.replace(/,/g, '').replace(/[^0-9]/g, '');
+  const num = parseInt(raw, 10);
+  if (!isNaN(num)) {
+    const cursor = el.selectionStart;
+    const oldLen = el.value.length;
+    el.value = num.toLocaleString();
+    // Adjust cursor position after comma insertion
+    const newLen = el.value.length;
+    el.setSelectionRange(cursor + (newLen - oldLen), cursor + (newLen - oldLen));
+  } else {
+    el.value = '';
+  }
+  recalc();
+}
+
+function getRawValue(i) {
+  const v = document.getElementById('bp_'+i).value.replace(/,/g, '');
+  const n = parseFloat(v);
+  return isNaN(n) || n < 0 ? 0 : n;
+}
+
 function recalc() {
-  const bpVals = categories.map((_, i) => {
-    const v = parseFloat(document.getElementById('bp_'+i).value);
-    return isNaN(v) || v < 0 ? 0 : v;
-  });
+  const bpVals = categories.map((_, i) => getRawValue(i));
 
   const totalEntered = bpVals.reduce((s, v) => s + v, 0);
   const totalGap     = TOTAL_MAX - totalEntered;
