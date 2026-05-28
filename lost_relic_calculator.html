@@ -138,6 +138,8 @@
     border: 1px solid var(--border);
     border-radius: 3px;
     padding: 20px;
+    min-width: 0;
+    overflow: hidden;
   }
   .section-heading {
     font-family: 'Cinzel', serif;
@@ -149,7 +151,10 @@
   .section-box.pillars .section-heading { color: var(--dust-color); }
   .section-box.relic .section-heading { color: var(--sandal-color); }
 
-  .input-group { margin-bottom: 14px; }
+  .input-group {
+    min-width: 0;
+    margin-bottom: 14px;
+  }
   .input-group:last-child { margin-bottom: 0; }
   .input-group label {
     display: block;
@@ -169,17 +174,22 @@
     color: var(--text-bright);
     font-family: 'Crimson Pro', serif;
     font-size: 16px;
-    padding: 8px 30px 8px 12px;
+    padding: 8px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+    background-color: var(--bg-deep);
+    box-sizing: border-box;
+  }
+  .input-group select {
     appearance: none;
     -webkit-appearance: none;
     cursor: pointer;
-    outline: none;
-    transition: border-color 0.2s;
+    padding-right: 30px;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234a7070'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
-    background-color: var(--bg-deep);
   }
+  .input-group input[type="number"]:focus { border-color: var(--teal-dim); }
   .input-group select:focus { border-color: var(--teal-dim); }
 
   .calc-btn {
