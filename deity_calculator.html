@@ -112,13 +112,12 @@
   /* Inputs grid */
   .inputs-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 16px;
     margin-bottom: 24px;
   }
   @media (max-width: 520px) {
-    .inputs-grid { grid-template-columns: 1fr 1fr; }
-    .inputs-grid .input-group:last-child { grid-column: 1 / -1; }
+    .inputs-grid { grid-template-columns: 1fr; }
   }
 
   .input-group label {
@@ -451,54 +450,38 @@
         </select>
       </div>
 
-      <div class="input-group">
-        <label>Number of Deities</label>
-        <select id="numDeities">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5" selected>5</option>
-        </select>
-      </div>
     </div>
 
     <button class="calc-btn" onclick="calculate()">Calculate Resources</button>
 
     <div class="results" id="results">
       <div class="results-divider"></div>
-      <div class="results-title">Resources Required — Per Deity &amp; Total</div>
+      <div class="results-title">Resources Required</div>
 
       <div class="results-grid">
         <div class="result-card stars">
           <div class="result-card-label">Drinking Bowl</div>
           <div class="result-card-resource">Stars Resource</div>
           <div class="result-card-value" id="starsEach">—</div>
-          <div class="result-card-sub">per deity</div>
-          <div class="result-card-value" id="starsTotal" style="margin-top:10px; font-size:16px; color:var(--star-color)">—</div>
-          <div class="result-card-sub">total (<span id="starsDeities">5</span> deities)</div>
+          <div class="result-card-sub">total needed</div>
         </div>
 
         <div class="result-card parts">
           <div class="result-card-label">Sacred Astrolabe</div>
           <div class="result-card-resource">Parts Resource</div>
           <div class="result-card-value" id="partsEach">—</div>
-          <div class="result-card-sub">per deity</div>
-          <div class="result-card-value" id="partsTotal" style="margin-top:10px; font-size:16px; color:var(--parts-color)">—</div>
-          <div class="result-card-sub">total (<span id="partsDeities">5</span> deities)</div>
+          <div class="result-card-sub">total needed</div>
         </div>
 
         <div class="result-card hearts">
           <div class="result-card-label">Flames of Olympus</div>
           <div class="result-card-resource">Hearts Resource</div>
           <div class="result-card-value" id="heartsEach">—</div>
-          <div class="result-card-sub">per deity</div>
-          <div class="result-card-value" id="heartsTotal" style="margin-top:10px; font-size:16px; color:var(--hearts-color)">—</div>
-          <div class="result-card-sub">total (<span id="heartsDeities">5</span> deities)</div>
+          <div class="result-card-sub">total needed</div>
         </div>
       </div>
 
-      <div class="results-title" style="margin-top:16px;">Choice Boxes Required (Total for all deities)</div>
+      <div class="results-title" style="margin-top:16px;">Choice Boxes Required</div>
       <div class="boxes-row">
         <div class="boxes-card">
           <div class="boxes-card-label">For Stars</div>
@@ -545,12 +528,9 @@
         <thead>
           <tr>
             <th>Level</th>
-            <th class="stars-val">Stars (each)</th>
-            <th class="parts-val">Parts (each)</th>
-            <th class="hearts-val">Hearts (each)</th>
-            <th>Stars ×5</th>
-            <th>Parts ×5</th>
-            <th>Hearts ×5</th>
+            <th class="stars-val">Stars</th>
+            <th class="parts-val">Parts</th>
+            <th class="hearts-val">Hearts</th>
           </tr>
         </thead>
         <tbody id="refTableBody"></tbody>
@@ -585,7 +565,6 @@ const ceil2 = n => Math.ceil(n * 100) / 100;
 function calculate() {
   const cur = parseInt(document.getElementById('currentLevel').value);
   const tar = parseInt(document.getElementById('targetLevel').value);
-  const nd  = parseInt(document.getElementById('numDeities').value);
 
   if (tar <= cur) {
     document.getElementById('results').classList.add('visible');
@@ -599,28 +578,21 @@ function calculate() {
     partsE  += costs[lvl].parts;
     heartsE += costs[lvl].hearts;
   }
-  const starsT  = starsE  * nd;
-  const partsT  = partsE  * nd;
-  const heartsT = heartsE * nd;
 
-  const bxStars  = ceil2(starsT  / 200);
-  const bxParts  = ceil2(partsT  / 30);
-  const bxHearts = ceil2(heartsT / 5);
+  const bxStars  = ceil2(starsE  / 200);
+  const bxParts  = ceil2(partsE  / 30);
+  const bxHearts = ceil2(heartsE / 5);
   const maxBoxes = Math.max(bxStars, bxParts, bxHearts);
   const bottleneck = bxStars >= bxParts && bxStars >= bxHearts ? 'Drinking Bowl (Stars)'
                    : bxParts >= bxHearts ? 'Sacred Astrolabe (Parts)'
                    : 'Flames of Olympus (Hearts)';
 
   document.getElementById('starsEach').textContent  = fmt(starsE);
-  document.getElementById('starsTotal').textContent  = fmt(starsT);
   document.getElementById('partsEach').textContent  = fmt(partsE);
-  document.getElementById('partsTotal').textContent  = fmt(partsT);
   document.getElementById('heartsEach').textContent = fmt(heartsE);
-  document.getElementById('heartsTotal').textContent = fmt(heartsT);
   document.getElementById('boxesStars').textContent  = fmt(bxStars);
   document.getElementById('boxesParts').textContent  = fmt(bxParts);
   document.getElementById('boxesHearts').textContent = fmt(bxHearts);
-  ['starsDeities','partsDeities','heartsDeities'].forEach(id => document.getElementById(id).textContent = nd);
   document.getElementById('summaryLevels').textContent     = `${cur} → ${tar} (${tar - cur} levels)`;
   document.getElementById('summaryBottleneck').textContent = bottleneck;
   document.getElementById('summaryMax').textContent        = fmt(maxBoxes) + ' boxes';
@@ -638,9 +610,6 @@ function buildRefTable() {
       <td class="stars-val">${fmt(c.stars)}</td>
       <td class="parts-val">${fmt(c.parts)}</td>
       <td class="hearts-val">${fmt(c.hearts)}</td>
-      <td>${fmt(c.stars * 5)}</td>
-      <td>${fmt(c.parts * 5)}</td>
-      <td>${fmt(c.hearts * 5)}</td>
     `;
     tbody.appendChild(tr);
   }
