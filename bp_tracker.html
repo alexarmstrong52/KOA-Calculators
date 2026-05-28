@@ -392,12 +392,30 @@ function formatInput(el) {
     el.value = '';
   }
   recalc();
+  saveData();
 }
 
 function getRawValue(i) {
   const v = document.getElementById('bp_'+i).value.replace(/[,\.\s]/g, '');
   const n = parseFloat(v);
   return isNaN(n) || n < 0 ? 0 : n;
+}
+
+function saveData() {
+  const vals = categories.map((_, i) => getRawValue(i));
+  localStorage.setItem('koa_bp_data', JSON.stringify(vals));
+}
+
+function loadData() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('koa_bp_data'));
+    if (!Array.isArray(saved)) return;
+    saved.forEach((val, i) => {
+      const el = document.getElementById('bp_'+i);
+      if (el && val > 0) el.value = val.toLocaleString();
+    });
+    recalc();
+  } catch(e) {}
 }
 
 function recalc() {
@@ -442,11 +460,12 @@ function recalc() {
 function resetAll() {
   if (!confirm('Reset all entered values?')) return;
   categories.forEach((_, i) => { document.getElementById('bp_'+i).value = ''; });
+  localStorage.removeItem('koa_bp_data');
   recalc();
 }
 
 buildTable();
-recalc();
+loadData();
 </script>
 </body>
 </html>
