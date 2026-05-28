@@ -446,69 +446,6 @@ function resetAll() {
 
 buildTable();
 recalc();
-
-// ── Translations ──────────────────────────────────────────
-const LANG = {
-  en: {
-    eyebrow:'Kingdom 169', h1:'Benefit Power Tracker',
-    hint:'Enter your B.P. values below — all calculations update automatically. Enter numbers without commas.',
-    sumEntered:'Total B.P. Entered', sumMax:'Max Possible B.P.', sumGapLbl:'Total Gap', sumPctLbl:'% of Max Achieved',
-    sumSub:'overall completion', panelLabel:'Category Breakdown',
-    thCat:'Category', thBP:'B.P. (enter yours)', thMax:'Max B.P.', thGap:'Gap B.P.',
-    thPctBP:'% of B.P.', thPctTotal:'% of Total', thPctGap:'% of GAP',
-    reset:'Reset All Values', back:'← Back',
-    cats:['Hero','Equipment','Gemstone','Hero Weapon','Draconic','Dragon Emblem','Dragon','Research','Building Prestige','Battle Formation','Mystic Soul','Deity','Divine Favour','TOTAL'],
-  },
-  zh: {
-    eyebrow:'王国169', h1:'战力追踪器',
-    hint:'在下方输入您的战力值 — 所有计算将自动更新。请输入不带逗号的数字。',
-    sumEntered:'已输入总战力', sumMax:'最大可能战力', sumGapLbl:'总差距', sumPctLbl:'已达到最大值的%',
-    sumSub:'总体完成度', panelLabel:'类别分析',
-    thCat:'类别', thBP:'战力 (输入您的)', thMax:'最大战力', thGap:'战力差距',
-    thPctBP:'战力%', thPctTotal:'总计%', thPctGap:'差距%',
-    reset:'重置所有数值', back:'← 返回',
-    cats:['英雄','装备','宝石','英雄武器','龙族','龙纹章','巨龙','研究','建筑威望','战阵','神秘之魂','神明','神恩','总计'],
-  }
-};
-
-function applyBPLang(lang) {
-  const t = LANG[lang];
-  const q = sel => document.querySelector(sel);
-  const qa = sel => document.querySelectorAll(sel);
-
-  q('.header-eyebrow').textContent = t.eyebrow;
-  q('h1').textContent = t.h1;
-  q('.hint').textContent = t.hint;
-  q('.back-btn').textContent = t.back;
-  q('.reset-btn').textContent = t.reset;
-  q('.panel-label').textContent = t.panelLabel;
-
-  // Summary card labels
-  const sumLabels = qa('.sum-label');
-  if (sumLabels[0]) sumLabels[0].textContent = t.sumEntered;
-  if (sumLabels[1]) sumLabels[1].textContent = t.sumMax;
-  if (sumLabels[2]) sumLabels[2].textContent = t.sumGapLbl;
-  if (sumLabels[3]) sumLabels[3].textContent = t.sumPctLbl;
-  const sumSubs = qa('.sum-sub');
-  if (sumSubs[2]) sumSubs[2].textContent = t.sumSub;
-
-  // Table headers
-  const ths = qa('thead th');
-  const hdrs = [t.thCat, t.thBP, t.thMax, t.thGap, t.thPctBP, t.thPctTotal, t.thPctGap];
-  ths.forEach((th, i) => { if (hdrs[i]) th.textContent = hdrs[i]; });
-
-  // Category names in first column of each row
-  const rows = qa('tbody tr');
-  t.cats.forEach((name, i) => {
-    if (rows[i]) {
-      const firstCell = rows[i].querySelector('td:first-child');
-      if (firstCell) firstCell.textContent = name;
-    }
-  });
-}
-
-const savedLang = localStorage.getItem('koa_lang') || 'en';
-applyBPLang(savedLang);
 </script>
 </body>
 </html>
