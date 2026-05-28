@@ -138,7 +138,8 @@
     color: var(--text-dim);
     margin-bottom: 6px;
   }
-  .input-group select {
+  .input-group select,
+  .input-group input[type="number"] {
     width: 100%;
     background: var(--bg-deep);
     border: 1px solid var(--border);
@@ -330,7 +331,7 @@
 <div class="page-wrapper">
 
   <div class="header">
-    <div class="header-eyebrow">Skyloft</div>
+    <div class="header-eyebrow">Kingdom 169</div>
     <h1>Lost Relic Calculator</h1>
   </div>
 
@@ -343,24 +344,24 @@
       <div class="section-box pillars">
         <div class="section-heading">⬡ Pillars</div>
         <div class="input-group">
-          <label>Current Pillar Level</label>
-          <select id="pillarCur"></select>
+          <label>Current Pillar Level (0–299)</label>
+          <input type="number" id="pillarCur" value="0" min="0" max="299" placeholder="e.g. 0">
         </div>
         <div class="input-group">
-          <label>Target Pillar Level</label>
-          <select id="pillarTar"></select>
+          <label>Target Pillar Level (1–300)</label>
+          <input type="number" id="pillarTar" value="300" min="1" max="300" placeholder="e.g. 300">
         </div>
       </div>
       <!-- Relic -->
       <div class="section-box relic">
         <div class="section-heading">◈ Relic Rank</div>
         <div class="input-group">
-          <label>Current Relic Rank</label>
-          <select id="relicCur"></select>
+          <label>Current Relic Rank (0–29)</label>
+          <input type="number" id="relicCur" value="0" min="0" max="29" placeholder="e.g. 0">
         </div>
         <div class="input-group">
-          <label>Target Relic Rank</label>
-          <select id="relicTar"></select>
+          <label>Target Relic Rank (1–30)</label>
+          <input type="number" id="relicTar" value="30" min="1" max="30" placeholder="e.g. 30">
         </div>
       </div>
     </div>
@@ -576,28 +577,6 @@ function calcRelicFragments(from, to) {
   return { sandals, pandoras };
 }
 
-function populate() {
-  const pCur = document.getElementById('pillarCur');
-  const pTar = document.getElementById('pillarTar');
-  for (let i = 0; i <= 299; i++) {
-    pCur.appendChild(new Option(i, i));
-  }
-  for (let i = 1; i <= 300; i++) {
-    pTar.appendChild(new Option(i, i));
-  }
-  pTar.value = 300;
-
-  const rCur = document.getElementById('relicCur');
-  const rTar = document.getElementById('relicTar');
-  for (let i = 0; i <= 29; i++) {
-    rCur.appendChild(new Option(i === 0 ? '0 (none)' : i, i));
-  }
-  for (let i = 1; i <= 30; i++) {
-    rTar.appendChild(new Option(i, i));
-  }
-  rTar.value = 30;
-}
-
 function calculate() {
   const pCur = parseInt(document.getElementById('pillarCur').value);
   const pTar = parseInt(document.getElementById('pillarTar').value);
@@ -606,8 +585,10 @@ function calculate() {
 
   const results = document.getElementById('results');
   let errors = [];
-  if (pTar <= pCur) errors.push('Pillar target must be greater than current.');
-  if (rTar <= rCur) errors.push('Relic target must be greater than current.');
+  if (isNaN(pCur) || isNaN(pTar) || pTar <= pCur) errors.push('Pillar target must be greater than current (0–300).');
+  if (isNaN(rCur) || isNaN(rTar) || rTar <= rCur) errors.push('Relic target must be greater than current (0–30).');
+  if (pCur < 0 || pTar > 300) errors.push('Pillar levels must be between 0 and 300.');
+  if (rCur < 0 || rTar > 30) errors.push('Relic ranks must be between 0 and 30.');
 
   if (errors.length) {
     results.innerHTML = '<div class="results-divider"></div>' +
@@ -684,7 +665,6 @@ function toggleTable(id, btn) {
   btn.textContent = tableStates[id] ? 'Show' : 'Hide';
 }
 
-populate();
 buildPillarTable();
 buildRelicTable();
 </script>
