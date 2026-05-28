@@ -24,7 +24,29 @@
     --boxes-color: #90d090;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: linear-gradient(135deg, #3a2a0a 0%, #5a4015 50%, #3a2a0a 100%);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 9px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    z-index: 100;
+  }
+  .back-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold-light);
+    box-shadow: 0 0 16px rgba(201,168,76,0.15);
+  }
 
   body {
     background: var(--bg-deep);
@@ -396,6 +418,7 @@
 </style>
 </head>
 <body>
+<a class="back-btn" href="index.html">← Back</a>
 <div class="page-wrapper">
 
   <div class="header">
